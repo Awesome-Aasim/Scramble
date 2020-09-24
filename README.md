@@ -1,8 +1,10 @@
+![Glitched Windows desktop](Glitch.jpg)
+
 # Scramble?
 Yes, that is the name of the program.  This program creates cool glitch effects with your screen.  Use this to prank your friends!
 
 ## Known issues
-Taskbar does not act glitched.
+Taskbar and other Windows processes are not affected by the glitch.
 
 Sometimes there is latency.
 
