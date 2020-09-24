@@ -78,12 +78,16 @@ namespace Scramble
             InitializeComponent();
             this.TransparencyKey = this.BackColor;
             this.Size = new Size(Screen.FromControl(this).Bounds.Width, Screen.FromControl(this).Bounds.Height);
+            pictureBox1.Size = new Size(Screen.FromControl(this).Bounds.Width, Screen.FromControl(this).Bounds.Height);
             this.Closing += new CancelEventHandler(this.Scramble_Closing);
+            this.WindowState = FormWindowState.Normal;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Bounds = Screen.PrimaryScreen.Bounds;
         }
         private void Scramble_Load(object sender, EventArgs e)
         {
             timer1.Tick += new EventHandler(timer1_tick);
-            timer1.Interval = 100;
+            timer1.Interval = 50;
             timer1.Start();
             glitchScreenshot();
         }
@@ -101,6 +105,8 @@ namespace Scramble
             {
                 pictureBox1.Image = null;
             }
+
+            this.TopMost = true;
             this.Refresh();
         }
 
@@ -109,109 +115,134 @@ namespace Scramble
             timer1.Stop();
             var screen = System.Windows.Forms.Screen.PrimaryScreen;
             var rect = screen.Bounds;
-            var size = new Size(rand.Next(screen.Bounds.Width - 1) + 1, rand.Next(screen.Bounds.Height - 1) + 1);
-
             Bitmap bmp = new Bitmap(rect.Size.Width, rect.Size.Height);
-            /*
-            var bmp = new Bitmap(size.Width, size.Height);
-            // get random coordinates to transfer pixels to bitmap
-            var x = rand.Next(bmp.Width);
-            var y = rand.Next(bmp.Height);
-            // get random coordinates
-            var x0 = rand.Next(bmp.Width);
-            var y0 = rand.Next(bmp.Height);
-            */
-            // replace the pixels with that color
-            var x = rand.Next(screen.Bounds.Width);
-            var y = rand.Next(screen.Bounds.Height);
-            var x0 = rand.Next(screen.Bounds.Width);
-            var y0 = rand.Next(screen.Bounds.Height);
-            while (size.Width + x0 > rect.Size.Width)
+            int n = rand.Next(6);
+            for (int l = 0; l < n; l++)
             {
-                size.Width--;
-            }
-            while (size.Height + y0 > rect.Size.Height)
-            {
-                size.Height--;
-            }
-            Bitmap bmp2 = new Bitmap(size.Width, size.Height);
-            Graphics g = Graphics.FromImage(bmp);
-            Graphics g2 = Graphics.FromImage(bmp2);
-            //g.CopyFromScreen(x, y, rand.Next(screen.Bounds.Width), rand.Next(screen.Bounds.Height), size);
-            g2.CopyFromScreen(x0, y0, 0, 0, size);
-            var rect2 = new Rectangle(0, 0, size.Width, size.Height);
-            // Lock the bitmap's bits.  
-            BitmapData bmpData = bmp2.LockBits(rect2, ImageLockMode.ReadWrite, bmp2.PixelFormat);
+                var x = rand.Next(screen.Bounds.Width);
+                var y = rand.Next(screen.Bounds.Height);
+                var x0 = rand.Next(screen.Bounds.Width);
+                var y0 = rand.Next(screen.Bounds.Height);
+                var width = rand.Next(screen.Bounds.Width - 1) + 1;
+                var height = rand.Next(screen.Bounds.Height - 1) + 1;
+                var op = rand.Next();
+                if (op % 20 == 0 || op % 20 == 1)
+                {
+                    x = 0;
+                    width = screen.Bounds.Width;
+                    height = height > screen.Bounds.Height / 20 ? screen.Bounds.Height / 20 : Height;
+                }
 
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
+                if (op % 20 == 2 || op % 20 == 3)
+                {
+                    y = 0;
+                    height = screen.Bounds.Height;
+                    width = width > screen.Bounds.Width / 20 ? screen.Bounds.Width / 20 : width;
+                }
+                if (op % 20 == 10)
+                {
+                    x = 0;
+                    y = 0;
+                    x0 = 0;
+                    y0 = 0;
+                    width = screen.Bounds.Width;
+                    height = screen.Bounds.Height;
+                    l = n;
+                }
+                var size = new Size(width, height);
+                while (size.Width + x0 > rect.Size.Width)
+                {
+                    size.Width--;
+                }
+                while (size.Height + y0 > rect.Size.Height)
+                {
+                    size.Height--;
+                }
+                Bitmap bmp2 = new Bitmap(size.Width, size.Height);
+                Graphics g = Graphics.FromImage(bmp);
+                Graphics g2 = Graphics.FromImage(bmp2);
+                //g.CopyFromScreen(x, y, rand.Next(screen.Bounds.Width), rand.Next(screen.Bounds.Height), size);
+                g2.CopyFromScreen(x0, y0, 0, 0, size);
+                var rect2 = new Rectangle(0, 0, size.Width, size.Height);
+                // Lock the bitmap's bits.  
+                BitmapData bmpData = bmp2.LockBits(rect2, ImageLockMode.ReadWrite, bmp2.PixelFormat);
 
-            // Declare an array to hold the bytes of the bitmap.
-            int bytes = Math.Abs(bmpData.Stride) * bmp2.Height;
-            byte[] rgbValues = new byte[bytes];
+                // Get the address of the first line.
+                IntPtr ptr = bmpData.Scan0;
 
-            // Copy the RGB values into the array.
-            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
-            int[] val = { rand.Next(-255, 256), rand.Next(-255, 256), rand.Next(-255, 256), 0 };
-            int temp;
-            switch (rand.Next(100))
-            {
-                case 0 | 1 | 2 | 3:
-                    for (int counter = 0; counter < rgbValues.Length; counter++)
-                    {
-                        temp = rgbValues[counter];
-                        temp += val[counter % 4];
-                        if (temp > 255) temp = 255;
-                        if (temp < 0) temp = 0;
-                        rgbValues[counter] = (byte)temp;
-                    }
-                    // Copy the RGB values back to the bitmap
-                    System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
-                    bmp2.UnlockBits(bmpData);
-                    g.DrawImageUnscaled(bmp2, new Point(x, y));
-                    break;
-                case 4 | 5 | 6 | 7:
-                    for (int counter = 0; counter < rgbValues.Length; counter++)
-                    {
-                        temp = val[counter % 4] / 2 + 255;
-                        if (temp > 255) temp = 255;
-                        if (temp < 0) temp = 0;
-                        rgbValues[counter] = (byte)temp;
-                    }
-                    // Copy the RGB values back to the bitmap
-                    System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
-                    bmp2.UnlockBits(bmpData);
-                    g.DrawImageUnscaled(bmp2, new Point(x, y));
-                    break;
-                case 8:
-                    for (int counter = 0; counter < rgbValues.Length; counter++)
-                    {
-                        temp = rgbValues[counter];
-                        temp += rand.Next(-255, 256);
-                        if (temp > 255) temp = 255;
-                        if (temp < 0) temp = 0;
-                        rgbValues[counter] = (byte)temp;
-                    }
-                    // Copy the RGB values back to the bitmap
-                    System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
-                    bmp2.UnlockBits(bmpData);
-                    g.DrawImageUnscaled(bmp2, new Point(x, y));
-                    break;
-                case 9:
-                    for (int counter = 0; counter < rgbValues.Length; counter++)
-                    {
-                        temp = rand.Next(256);
-                        if (temp > 255) temp = 255;
-                        if (temp < 0) temp = 0;
-                        rgbValues[counter] = (byte)temp;
-                    }
-                    // Copy the RGB values back to the bitmap
-                    System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
-                    bmp2.UnlockBits(bmpData);
-                    g.DrawImageUnscaled(bmp2, new Point(x, y));
-                    break;
-                default:
-                    break;
+                // Declare an array to hold the bytes of the bitmap.
+                int bytes = Math.Abs(bmpData.Stride) * bmp2.Height;
+                byte[] rgbValues = new byte[bytes];
+
+                // Copy the RGB values into the array.
+                System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
+                int[] val = { rand.Next(-255, 256), rand.Next(-255, 256), rand.Next(-255, 256), rand.Next(-255, 256) };
+                int temp;
+                switch (rand.Next(50))
+                {
+                    case 0 | 1 | 2 | 3:
+                        for (int counter = 0; counter < rgbValues.Length; counter++)
+                        {
+                            temp = rgbValues[counter];
+                            temp += val[counter % 4];
+                            if (temp > 255) temp = 255;
+                            if (temp < 0) temp = 0;
+                            rgbValues[counter] = (byte)temp;
+                        }
+                        // Copy the RGB values back to the bitmap
+                        System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                        bmp2.UnlockBits(bmpData);
+                        g.DrawImageUnscaled(bmp2, new Point(x, y));
+                        break;
+                    case 4 | 5 | 6:
+                        for (int counter = 0; counter < rgbValues.Length; counter++)
+                        {
+                            temp = val[counter % 4] / 2 + 255;
+                            if (temp > 255) temp = 255;
+                            if (temp < 0) temp = 0;
+                            rgbValues[counter] = (byte)temp;
+                        }
+                        // Copy the RGB values back to the bitmap
+                        System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                        bmp2.UnlockBits(bmpData);
+                        g.DrawImageUnscaled(bmp2, new Point(x, y));
+                        break;
+                    case 8:
+                        for (int counter = 0; counter < rgbValues.Length; counter++)
+                        {
+                            temp = rgbValues[counter];
+                            temp += rand.Next(-255, 256);
+                            if (temp > 255) temp = 255;
+                            if (temp < 0) temp = 0;
+                            rgbValues[counter] = (byte)temp;
+                        }
+                        // Copy the RGB values back to the bitmap
+                        System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                        bmp2.UnlockBits(bmpData);
+                        g.DrawImageUnscaled(bmp2, new Point(x, y));
+                        break;
+                    case 9:
+                        for (int counter = 0; counter < rgbValues.Length; counter++)
+                        {
+                            temp = rand.Next(256);
+                            if (temp > 255) temp = 255;
+                            if (temp < 0) temp = 0;
+                            rgbValues[counter] = (byte)temp;
+                        }
+                        // Copy the RGB values back to the bitmap
+                        System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                        bmp2.UnlockBits(bmpData);
+                        g.DrawImageUnscaled(bmp2, new Point(x, y));
+                        break;
+                    case 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19:
+                        // Copy the RGB values back to the bitmap
+                        System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                        bmp2.UnlockBits(bmpData);
+                        g.DrawImageUnscaled(bmp2, new Point(x, y));
+                        break;
+                    default:
+                        break;
+                }
             }
             pictureBox1.Image = bmp;
             timer1.Start();
