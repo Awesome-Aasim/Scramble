@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.awt.image.*;
 import java.awt.*;
 import javax.swing.*;
-
 import java.util.Random;
 
 public class Scramble {
