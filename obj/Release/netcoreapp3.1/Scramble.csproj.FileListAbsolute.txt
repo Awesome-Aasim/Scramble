@@ -1,0 +1,16 @@
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\bin\Release\netcoreapp3.1\Scramble.exe
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\bin\Release\netcoreapp3.1\Scramble.deps.json
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\bin\Release\netcoreapp3.1\Scramble.runtimeconfig.json
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\bin\Release\netcoreapp3.1\Scramble.runtimeconfig.dev.json
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\bin\Release\netcoreapp3.1\Scramble.dll
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\bin\Release\netcoreapp3.1\Scramble.pdb
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.csprojAssemblyReference.cache
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.Scramble.resources
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.Properties.Resources.resources
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.csproj.GenerateResource.cache
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.AssemblyInfoInputs.cache
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.AssemblyInfo.cs
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.csproj.CoreCompileInputs.cache
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.dll
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.pdb
+C:\Users\aasim\OneDrive\Documents\GitHub\Scramble\obj\Release\netcoreapp3.1\Scramble.genruntimeconfig.cache
