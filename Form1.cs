@@ -165,6 +165,10 @@ namespace Scramble
                         if (temp < 0) temp = 0;
                         rgbValues[counter] = (byte)temp;
                     }
+                    // Copy the RGB values back to the bitmap
+                    System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                    bmp2.UnlockBits(bmpData);
+                    g.DrawImageUnscaled(bmp2, new Point(x, y));
                     break;
                 case 4 | 5 | 6 | 7:
                     for (int counter = 0; counter < rgbValues.Length; counter++)
@@ -174,6 +178,10 @@ namespace Scramble
                         if (temp < 0) temp = 0;
                         rgbValues[counter] = (byte)temp;
                     }
+                    // Copy the RGB values back to the bitmap
+                    System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                    bmp2.UnlockBits(bmpData);
+                    g.DrawImageUnscaled(bmp2, new Point(x, y));
                     break;
                 case 8:
                     for (int counter = 0; counter < rgbValues.Length; counter++)
@@ -184,6 +192,10 @@ namespace Scramble
                         if (temp < 0) temp = 0;
                         rgbValues[counter] = (byte)temp;
                     }
+                    // Copy the RGB values back to the bitmap
+                    System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                    bmp2.UnlockBits(bmpData);
+                    g.DrawImageUnscaled(bmp2, new Point(x, y));
                     break;
                 case 9:
                     for (int counter = 0; counter < rgbValues.Length; counter++)
@@ -193,14 +205,14 @@ namespace Scramble
                         if (temp < 0) temp = 0;
                         rgbValues[counter] = (byte)temp;
                     }
+                    // Copy the RGB values back to the bitmap
+                    System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+                    bmp2.UnlockBits(bmpData);
+                    g.DrawImageUnscaled(bmp2, new Point(x, y));
                     break;
                 default:
                     break;
             }
-            // Copy the RGB values back to the bitmap
-            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
-            bmp2.UnlockBits(bmpData);
-            g.DrawImageUnscaled(bmp2, new Point(x, y));
             pictureBox1.Image = bmp;
             timer1.Start();
         }
